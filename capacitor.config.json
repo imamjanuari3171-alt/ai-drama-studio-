@@ -1,0 +1,9 @@
+{
+  "appId": "com.imamjanuari.aidramastudio",
+  "appName": "AI Drama Studio",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": false
+  }
+}
