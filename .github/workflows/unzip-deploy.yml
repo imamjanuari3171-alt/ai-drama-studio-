@@ -1,10 +1,13 @@
-name: Extract Project ZIP and Deploy
+name: Deploy AI Drama Studio
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -13,41 +16,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  extract-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract project ZIP
+      - name: Verify website files
         run: |
           set -e
-          ZIP_FILE="ai-drama-studio-html-css-js.zip"
-          if [ ! -f "$ZIP_FILE" ]; then
-            echo "ZIP file not found: $ZIP_FILE"
-            exit 1
-          fi
-          mkdir -p extracted
-          unzip -o "$ZIP_FILE" -d extracted
-          ROOT_DIR=$(find extracted -mindepth 1 -maxdepth 1 -type d | head -n 1)
-          if [ -n "$ROOT_DIR" ]; then
-            cp -a "$ROOT_DIR"/. .
-          else
-            cp -a extracted/. .
-          fi
-          rm -rf extracted
-          rm -f "$ZIP_FILE"
           test -f index.html
-
-      - name: Commit extracted source files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if ! git diff --cached --quiet; then
-            git commit -m "Extract AI Drama Studio source files from ZIP"
-            git push
-          fi
+          test -f style.css
+          test -f app.js
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
