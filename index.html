@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="AI Drama Studio — studio produksi drama berbasis AI dengan API Key milik pengguna.">
+  <title>AI Drama Studio</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" data-view="dashboard">
+      <span class="brand-mark">✦</span><span><b>AI DRAMA</b><small>STUDIO</small></span>
+    </a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav>
+      <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-item" data-view="create"><span>✧</span> Buat drama baru</button>
+      <button class="nav-item" data-view="projects"><span>▤</span> Proyek saya</button>
+    </nav>
+    <div class="nav-label">PENGATURAN</div>
+    <nav>
+      <button class="nav-item" data-view="settings"><span>◈</span> AI & API Key</button>
+      <button class="nav-item" data-view="guide"><span>ⓘ</span> Panduan</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="local-note"><span class="shield">◇</span><b>Local-first workspace</b><p>Key dan proyek disimpan di perangkat ini.</p></div>
+      <div class="profile"><span class="avatar">AD</span><span><b>Creator</b><small>Perangkat lokal</small></span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="mobileMenu" aria-label="Buka navigasi">☰</button>
+      <div class="crumb">AI DRAMA STUDIO <span>/</span> <b id="crumbCurrent">Dashboard</b></div>
+      <div class="top-right"><i class="online-dot"></i><span>Local workspace</span><span class="top-avatar">AD</span></div>
+    </header>
+
+    <section class="view active" id="view-dashboard">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">YOUR PERSONAL AI PRODUCTION STUDIO</span>
+          <h1>Dari ide sederhana<br>menjadi <em>drama luar biasa.</em></h1>
+          <p>Buat konsep, karakter, naskah, storyboard, dan prompt video dalam satu ruang produksi kreatif.</p>
+          <button class="btn primary" data-go="create">✦ Mulai proyek drama <span>→</span></button>
+        </div>
+        <div class="hero-visual" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div><div class="core">✦</div><span class="float-tag t1">SCRIPT</span><span class="float-tag t2">STORYBOARD</span><span class="float-tag t3">AI VIDEO</span></div>
+      </div>
+      <div class="section-head"><div><span class="eyebrow">OVERVIEW</span><h2>Studio overview</h2></div><span class="muted" id="today"></span></div>
+      <div class="stats">
+        <article class="stat"><span class="stat-icon purple">▤</span><small>Total proyek</small><b id="projectCount">0</b><label>Tersimpan di perangkat ini</label></article>
+        <article class="stat"><span class="stat-icon gold">✧</span><small>AI provider aktif</small><b id="activeProvider">Belum diatur</b><label id="providerLabel">Pilih provider dan masukkan key</label></article>
+        <article class="stat"><span class="stat-icon blue">◷</span><small>Proyek terakhir</small><b id="lastProject">Belum ada</b><label>Riwayat lokal</label></article>
+      </div>
+      <div class="section-head"><div><span class="eyebrow">YOUR WORK</span><h2>Proyek terbaru</h2></div><button class="text-link" data-go="projects">Lihat semua →</button></div>
+      <div class="project-grid" id="recentProjects"></div>
+    </section>
+
+    <section class="view" id="view-create">
+      <div class="page-head"><div><span class="eyebrow">NEW PRODUCTION</span><h1>Buat drama baru</h1><p>Masukkan ide cerita. AI akan mengembangkannya menjadi brief produksi lengkap.</p></div><span class="step">01 <i>/</i> 01</span></div>
+      <div class="create-layout">
+        <form class="panel" id="dramaForm">
+          <div class="panel-title"><span class="num">01</span><div><h2>Konsep cerita</h2><p>Mulai dengan ide utama dramamu.</p></div></div>
+          <label for="idea">Ide cerita <em>*</em></label>
+          <textarea id="idea" rows="5" maxlength="3500" minlength="12" required placeholder="Contoh: Seorang CEO muda menyamar menjadi teknisi AC di sebuah sekolah demi mendekati guru yang pernah menolongnya..."></textarea>
+          <div class="field-foot"><span>Jelaskan tokoh utama, tujuan, konflik, dan taruhannya.</span><span id="charCount">0 / 3500</span></div>
+          <div class="two-cols">
+            <div><label for="genre">Genre</label><select id="genre"><option>Drama romantis</option><option>CEO / Miliarder</option><option>Drama keluarga</option><option>Komedi romantis</option><option>Horor</option><option>Thriller</option><option>Aksi</option><option>Fantasi</option><option>Inspiratif</option><option>Persahabatan</option></select></div>
+            <div><label for="language">Bahasa output</label><select id="language"><option>Bahasa Indonesia</option><option>English</option></select></div>
+          </div>
+          <div class="rule"></div>
+          <div class="panel-title"><span class="num">02</span><div><h2>Format produksi</h2><p>Atur struktur brief yang dihasilkan.</p></div></div>
+          <div class="three-cols">
+            <div><label for="duration">Durasi (menit)</label><input id="duration" type="number" min="1" max="120" value="8"></div>
+            <div><label for="scenes">Jumlah scene</label><input id="scenes" type="number" min="1" max="40" value="12"></div>
+            <div><label for="sceneSeconds">Detik / scene</label><input id="sceneSeconds" type="number" min="4" max="60" value="8"></div>
+          </div>
+          <label for="audience">Target penonton</label><input id="audience" value="Penonton drama Indonesia usia 18+">
+          <label for="style">Gaya visual dan penceritaan</label><input id="style" value="Cinematic, emosional, realistis, hook kuat, dan cliffhanger">
+          <div class="rule"></div>
+          <div class="provider-summary" id="createProviderSummary">Atur provider dan API Key di menu AI & API Key terlebih dahulu.</div>
+          <button class="btn primary full" id="generateBtn" type="submit">✦ Generate brief drama <span>→</span></button>
+          <p class="tiny-note">Permintaan dikirim langsung dari browser ke provider yang kamu pilih. Biaya API ditagihkan oleh provider ke akunmu.</p>
+        </form>
+        <aside class="tips panel">
+          <div class="tips-art"><span>✦</span></div><span class="eyebrow">PRODUCTION TIP</span>
+          <h3>Ide spesifik menghasilkan drama yang lebih kuat.</h3>
+          <p>Sebutkan siapa tokohnya, apa yang mereka inginkan, siapa penghalangnya, dan apa taruhannya.</p>
+          <div class="example"><b>Contoh konflik</b><p>Tokoh utama harus memilih antara mengungkap identitas aslinya atau kehilangan orang yang mulai ia cintai.</p></div>
+          <div class="tip-line">✓ Hook pembuka yang kuat</div><div class="tip-line">✓ Karakter konsisten</div><div class="tip-line">✓ Scene dengan tujuan dramatik</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-projects">
+      <div class="page-head"><div><span class="eyebrow">LOCAL LIBRARY</span><h1>Proyek saya</h1><p>Proyek disimpan pada penyimpanan browser/perangkat ini.</p></div><button class="btn primary" data-go="create">＋ Proyek baru</button></div>
+      <div class="project-grid" id="allProjects"></div>
+    </section>
+
+    <section class="view" id="view-settings">
+      <div class="page-head"><div><span class="eyebrow">YOUR OWN AI KEY</span><h1>AI & API Key</h1><p>Pilih satu provider aktif dan hubungkan API Key milikmu sendiri.</p></div><span class="local-pill">◇ DEVICE ONLY</span></div>
+      <div class="settings-layout">
+        <div class="panel">
+          <div class="panel-title"><span class="num">01</span><div><h2>Pilih provider AI</h2><p>Hanya satu provider aktif untuk setiap sesi generator.</p></div></div>
+          <label for="providerSelect">Provider</label>
+          <select id="providerSelect"><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="kie">Kie.ai</option></select>
+          <label for="modelInput">Model ID</label>
+          <input id="modelInput" placeholder="Masukkan model ID sesuai akun provider">
+          <p class="help" id="modelHelp">Gunakan model ID yang tersedia pada akun provider dan API yang dipilih.</p>
+          <div class="rule"></div>
+          <div class="panel-title"><span class="num">02</span><div><h2>API Key lokal</h2><p>Key dienkripsi sebelum disimpan pada perangkat ini.</p></div></div>
+          <label for="apiKeyInput">API Key</label>
+          <div class="key-wrap"><input id="apiKeyInput" type="password" autocomplete="off" placeholder="Tempel API Key milikmu di sini"><button type="button" id="toggleKey" class="icon-btn" aria-label="Tampilkan API Key">◉</button></div>
+          <label for="vaultPassword">Kata sandi brankas lokal</label>
+          <input id="vaultPassword" type="password" autocomplete="new-password" placeholder="Buat kata sandi lokal (minimal 10 karakter)">
+          <p class="help">Kata sandi ini tidak dikirim dan tidak disimpan. Kamu perlu memasukkannya lagi untuk membuka key setelah aplikasi dimuat ulang.</p>
+          <div class="button-row"><button class="btn primary" id="saveKey">Enkripsi & simpan di perangkat</button><button class="btn secondary" id="unlockKey">Buka brankas</button></div>
+          <div class="button-row"><button class="btn secondary" id="testProvider">Tes koneksi provider</button><button class="btn danger" id="deleteKey">Hapus API Key lokal</button></div>
+          <div class="key-status" id="keyStatus" role="status">Belum ada API Key tersimpan.</div>
+        </div>
+        <aside class="panel security-panel">
+          <div class="security-symbol">◇</div><span class="eyebrow">LOCAL ENCRYPTION</span><h3>Key milikmu. Perangkatmu.</h3>
+          <p>API Key dienkripsi dengan AES-GCM menggunakan kunci turunan PBKDF2. Kata sandi brankas tidak disimpan oleh aplikasi.</p>
+          <ul><li>Key tidak dikirim ke server AI DRAMA STUDIO.</li><li>Key hanya dikirim ke provider terpilih saat kamu menjalankan permintaan.</li><li>Hapus data browser atau kehilangan kata sandi dapat membuat key tidak bisa dipulihkan.</li><li>Enkripsi lokal tidak melindungi key dari malware, ekstensi berbahaya, atau orang yang menguasai perangkat dan sesi browser.</li></ul>
+          <div class="warning"><b>Penting</b><p>Untuk keamanan akun, buat API Key khusus aplikasi dengan batas penggunaan jika provider menyediakan fitur tersebut. Jangan gunakan key utama dengan akses berlebihan.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="view-guide">
+      <div class="page-head"><div><span class="eyebrow">GETTING STARTED</span><h1>Panduan penggunaan</h1><p>Mulai menggunakan AI Drama Studio.</p></div></div>
+      <div class="guide-list">
+        <article><b>01. Pilih provider</b><p>Buka menu AI & API Key. Pilih OpenAI, Google Gemini, atau Kie.ai. Hanya satu provider aktif pada satu waktu.</p></article>
+        <article><b>02. Simpan API Key</b><p>Masukkan API Key dan buat kata sandi brankas lokal. Key dienkripsi dan disimpan pada browser/perangkat ini.</p></article>
+        <article><b>03. Pilih model</b><p>Masukkan model ID yang tersedia untuk API dan akunmu. Nama model dapat berubah mengikuti provider.</p></article>
+        <article><b>04. Buat brief drama</b><p>Isi ide cerita, genre, durasi, jumlah scene, target penonton, lalu generate.</p></article>
+        <article><b>05. Simpan dan ekspor</b><p>Hasil dapat disimpan di proyek lokal, disalin, atau diunduh sebagai TXT. Backup proyek secara berkala.</p></article>
+      </div>
+      <div class="warning guide-warning"><b>Catatan browser</b><p>Permintaan langsung ke API pihak ketiga dapat dibatasi oleh CORS. Jika browser menolak koneksi, aplikasi client-only tidak bisa mengatasinya sendiri tanpa proxy/backend yang dikonfigurasi oleh pemilik API.</p></div>
+    </section>
+
+    <section class="view" id="view-result">
+      <div class="page-head result-head"><div><span class="eyebrow">AI OUTPUT</span><h1 id="resultTitle">Brief drama</h1><p id="resultMeta">Hasil generasi AI.</p></div><div class="button-row"><button class="btn secondary" id="copyResult">Salin</button><button class="btn primary" id="downloadResult">↓ Unduh TXT</button></div></div>
+      <div class="panel result-panel"><div class="result-bar"><span><i class="online-dot"></i> GENERATION COMPLETE</span><button class="text-link" id="backProjects">← Kembali</button></div><pre id="resultContent"></pre></div>
+    </section>
+
+    <footer><span>✦ AI DRAMA STUDIO</span><span>Local-first creative production workspace</span></footer>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="./app.js" defer></script>
+</body>
+</html>
