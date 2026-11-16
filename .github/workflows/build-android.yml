@@ -28,7 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -39,9 +38,9 @@ jobs:
       - name: Prepare web assets
         run: |
           set -e
-          mkdir -p www
+          mkdir -p www/assets
           cp index.html style.css app.js www/
-          cp -R assets www/assets
+          cp -R assets/. www/assets/
           if [ -f manifest.webmanifest ]; then cp manifest.webmanifest www/; fi
           if [ -f sw.js ]; then cp sw.js www/; fi
           test -f www/index.html
